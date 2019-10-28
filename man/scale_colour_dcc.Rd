@@ -14,7 +14,7 @@ See also theme_dcc() and scale_colour_dcc
 df <- iris
 g <- ggplot(data=df, aes(x=Petal.Length, y=Petal.Width))
 g <- g + geom_point(aes(color=Species))
-g + 
+g +
 theme_dcc() +
 scale_colour_dcc()
 }

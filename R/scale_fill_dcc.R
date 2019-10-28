@@ -13,6 +13,6 @@
 #' scale_fill_dcc()
 
 scale_fill_dcc <- function () {
-  dcc_palette <- c("#1f144a", "#9B1889", "#747678", "#CA005D", "#6E2585", "#9CA299", "#776792", "#B9B1CA", "#3C306A")
+  dcc_palette <- c("#1f144a", "#9B1889", "#747678", "#CA005D", "#6E2585", "#9CA299", "#B9B1CA", "#B1227F", "#3C306A", "#776792")
   scale_fill_manual(values=dcc_palette)
 }
