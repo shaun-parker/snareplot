@@ -1,36 +1,37 @@
-left_align <- function(plot_variable, pieces){
-  grob <- ggplot2::ggplotGrob(plot_variable)
-  n <- length(pieces)
-  grob$layout$l[grob$layout$name %in% pieces] <- 2
-  return(grob)
-}
-
-create_footer <- function (caption, logo_image) {
-  #Make the footer
-  footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.1, "npc"), gp = grid::gpar(col = "#9CA299", lwd=0.5)),
-                           grid::textGrob(caption,
-                                          x = 0.004, hjust = 0, vjust = -0.6, gp = grid::gpar(fontsize=8)),
-                           grid::rasterGrob(png::readPNG(logo_image, native=TRUE, info=TRUE), x = 0.92))
-  return(footer)
-}
+#' Finalise Snare Industries standards plot for export
+#'
+#' Add Snare Industries Botanical background and Snare Industries Data Science watermark ready for image export
+#'
+#' @keywords finalise_plot
+#' @export
+#' @examples
+#' df <- iris
+#' g <- ggplot(data=df, aes(x=Petal.Length, y=Petal.Width))
+#' g <- g + geom_point(aes(color=Species))
+#' g <- g + theme_snare() + scale_colour_snare()
+#' finalise_plot(g)
 
 
 finalise_plot <- function(plot_variable,
-                          title,
-                          subtitle,
-                          caption,
-                          width_pixels=640,
-                          height_pixels=450,
-                          logo_image_path = "./data/DCC_final_Logo_RGB.png") {
+                          bg_image_path = file.path(system.file("data", package = 'snareplot'),
+                                                    "5k-botanical-minimal-potted-wallpaper.jpg"),
+                          draw_background)
+{
+  library(ggplot2, quietly=TRUE)
+  library(cowplot, quietly=TRUE)
+  library(jpeg, quietly=TRUE)
+
   
-  footer <- create_footer(caption, logo_image_path)
-  
-  #Draw your left-aligned grid
-  plot_left_aligned <- left_align(plot_variable + 
-                                    ggtitle(title,
-                                            subtitle), c("subtitle", "title", "caption"))
-  plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
-                                 ncol = 1, nrow = 2,
-                                 heights = c(1, 0.045/(height_pixels/450)))
-  plot_grid 
+    if(draw_background == TRUE){
+      ggdraw() +
+      draw_image(bg_image_path, scale=1.2, height=1, width=1, clip="off") +
+      draw_plot(plot_variable) +
+      draw_label("Snare Industries Data Science", x=0, y=0, hjust=-0.025, vjust=-0.8,
+                 size=9, fontfamily="Century Gothic", color="#747678")
+    } else {
+        ggdraw() + 
+        draw_plot(plot_variable) +
+        draw_label("Snare Industries Data Science", x=0, y=0, hjust=-0.025, vjust=-0.8,
+                   size=9, fontfamily="Century Gothic", color="#747678")
+      }
 }
